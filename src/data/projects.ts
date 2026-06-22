@@ -7,7 +7,7 @@
    =========================================================================== */
 
 export type Lang = 'Rust' | 'Web' | 'Shell';
-export type Platform = 'CLI' | 'Desktop' | 'Web' | 'Library' | 'Scripts';
+export type Platform = 'CLI' | 'Desktop' | 'Web' | 'Extension' | 'Library' | 'Scripts';
 export type Status = 'Stable' | 'Active' | 'WIP' | 'Retired';
 export type Accent = 'rust' | 'teal' | 'hazard';
 
@@ -80,6 +80,20 @@ export const projects: Project[] = [
     tags: ['Dragon Quest', 'routing', 'Dijkstra', 'bilingual'],
     accent: 'hazard',
     launch: 'https://dqx-wayfinder.trashtools.net',
+  },
+  {
+    slug: 'cardtable',
+    name: 'cardtable',
+    emoji: '🃏',
+    tagline: 'a spatial canvas for your browser tabs',
+    blurb:
+      'Every tab becomes a Polaroid card — a screenshot — on a pannable, zoomable 2D table. Group cards into hand-drawn chalk blobs, annotate them, and let the tabs you aren’t using sleep to save memory. New tabs arrive as cards in your hand to drop onto the table or into the bin; it replaces your new-tab page, so the canvas is home. Chromium + Firefox (MV3), local-only — nothing leaves your machine. Too useful to call junk.',
+    lang: 'Web',
+    platform: 'Extension',
+    status: 'WIP',
+    tags: ['browser tabs', 'Chrome + Firefox', 'MV3', 'local-only'],
+    accent: 'teal',
+    releases: true,
   },
   {
     slug: 'expat-junk',
@@ -174,6 +188,6 @@ export function releasesUrl(p: Project): string | undefined {
 /** Distinct facet values, in display order, for the filter UI. */
 export const facets = {
   lang: ['Rust', 'Web', 'Shell'] as Lang[],
-  platform: ['CLI', 'Desktop', 'Web', 'Library', 'Scripts'] as Platform[],
+  platform: ['CLI', 'Desktop', 'Web', 'Extension', 'Library', 'Scripts'] as Platform[],
   status: ['Stable', 'Active', 'WIP'] as Status[],
 };
