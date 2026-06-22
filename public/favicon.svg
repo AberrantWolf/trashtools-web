@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Trash Tools">
+  <!-- A little salvage crate with a hazard stripe and a spark of life. -->
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#211b14"/>
+  <!-- crate body -->
+  <path d="M16 26 h32 l-3 26 a4 4 0 0 1-4 3.4 H23 a4 4 0 0 1-4-3.4 Z" fill="#c0531f"/>
+  <!-- lid -->
+  <rect x="13" y="20" width="38" height="7" rx="3" fill="#e3743c"/>
+  <!-- handle -->
+  <path d="M26 20 v-3 a6 4 0 0 1 12 0 v3" fill="none" stroke="#e3743c" stroke-width="3"/>
+  <!-- hazard stripes -->
+  <g fill="#e7b21c">
+    <path d="M23 30 l4 0 -5 20 -3.6 0 Z"/>
+    <path d="M31 30 l4 0 -3.4 22 -3.8 0 Z"/>
+    <path d="M39 30 l4 0 -2 22 -3.8 0 Z"/>
+  </g>
+  <!-- spark: it's alive, surprisingly -->
+  <path d="M44 11 l2 5 5 2 -5 2 -2 5 -2-5 -5-2 5-2 Z" fill="#46a187"/>
+</svg>

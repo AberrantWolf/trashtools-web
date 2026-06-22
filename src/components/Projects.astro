@@ -1,0 +1,232 @@
+---
+import { projects, facets } from '../data/projects';
+import ProjectCard from './ProjectCard.astro';
+---
+
+<section class="projects" id="projects" aria-labelledby="projects-h">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="tape">the pile</span>
+      <h2 id="projects-h">Six tools, assorted condition.</h2>
+      <p class="lede">
+        Mostly Rust, one that runs right in your browser, all built in spare time with a
+        robot riding shotgun. Sort through it.
+      </p>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter projects">
+      <div class="filter-row">
+        <span class="filter-label">lang</span>
+        {facets.lang.map((v) => <button class="chip" data-facet="lang" data-value={v}>{v}</button>)}
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">kind</span>
+        {
+          facets.platform.map((v) => (
+            <button class="chip" data-facet="platform" data-value={v}>
+              {v}
+            </button>
+          ))
+        }
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">state</span>
+        {
+          facets.status.map((v) => (
+            <button class="chip" data-facet="status" data-value={v}>
+              {v}
+            </button>
+          ))
+        }
+        <button class="chip chip-reset" data-reset hidden>✕ clear</button>
+      </div>
+      <p class="count" aria-live="polite" data-count></p>
+    </div>
+
+    <div class="grid" data-grid>
+      {projects.map((p, i) => <ProjectCard project={p} index={i} />)}
+      <p class="empty" data-empty hidden>
+        Nothing in the bin matches that. <button class="linklike" data-reset>Dump it all back out.</button>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects {
+    padding-block: clamp(3rem, 8vw, 6rem);
+  }
+  .section-head {
+    max-width: 44rem;
+    margin-bottom: 1.8rem;
+  }
+  .section-head h2 {
+    font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem);
+    margin-top: 0.7rem;
+  }
+  .lede {
+    color: var(--ink-soft);
+    margin-top: 0.7rem;
+    font-size: 1.05rem;
+  }
+
+  .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1rem 1.1rem;
+    margin-bottom: 1.8rem;
+    background: var(--paper-2);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+  }
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .filter-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 3.2rem;
+    flex: none;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0.34rem 0.7rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink-soft);
+    transition:
+      background 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.1s ease;
+  }
+  .chip:hover {
+    transform: translateY(-1px);
+    border-color: var(--rust);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--rust);
+    border-color: var(--rust);
+    color: #fff;
+  }
+  :root[data-theme='dark'] .chip[aria-pressed='true'] {
+    color: #16120d;
+  }
+  .chip-reset {
+    color: var(--muted);
+  }
+  .chip-reset[aria-pressed] {
+    background: var(--surface);
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: 1.2rem;
+    align-items: stretch;
+  }
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--ink-soft);
+    padding: 2.5rem 1rem;
+  }
+  .linklike {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    color: var(--rust-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chip {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Filtering: OR within a facet, AND across facets. Pure DOM, no framework.
+  const root = document.getElementById('projects');
+  if (root) {
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('.chip[data-facet]')];
+    const cards = [...root.querySelectorAll<HTMLElement>('.card')];
+    const resetBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-reset]')];
+    const countEl = root.querySelector<HTMLElement>('[data-count]');
+    const emptyEl = root.querySelector<HTMLElement>('[data-empty]');
+    const resetChip = root.querySelector<HTMLButtonElement>('.chip-reset');
+
+    // active selections per facet
+    const active: Record<string, Set<string>> = {
+      lang: new Set(),
+      platform: new Set(),
+      status: new Set(),
+    };
+
+    chips.forEach((c) => c.setAttribute('aria-pressed', 'false'));
+
+    function apply() {
+      let shown = 0;
+      cards.forEach((card) => {
+        const ok = (['lang', 'platform', 'status'] as const).every((f) => {
+          const sel = active[f];
+          return sel.size === 0 || sel.has(card.dataset[f] ?? '');
+        });
+        card.hidden = !ok;
+        if (ok) shown += 1;
+      });
+
+      const anyActive = Object.values(active).some((s) => s.size > 0);
+      if (countEl) {
+        countEl.textContent = anyActive
+          ? `showing ${shown} of ${cards.length}`
+          : `${cards.length} tools, all of it`;
+      }
+      if (emptyEl) emptyEl.hidden = shown !== 0;
+      if (resetChip) resetChip.hidden = !anyActive;
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const f = chip.dataset.facet!;
+        const v = chip.dataset.value!;
+        const pressed = chip.getAttribute('aria-pressed') === 'true';
+        chip.setAttribute('aria-pressed', String(!pressed));
+        if (pressed) active[f].delete(v);
+        else active[f].add(v);
+        apply();
+      });
+    });
+
+    function reset() {
+      Object.values(active).forEach((s) => s.clear());
+      chips.forEach((c) => c.setAttribute('aria-pressed', 'false'));
+      apply();
+    }
+    resetBtns.forEach((b) => b.addEventListener('click', reset));
+
+    apply();
+  }
+</script>

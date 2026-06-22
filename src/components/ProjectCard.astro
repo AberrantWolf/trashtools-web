@@ -1,0 +1,272 @@
+---
+import type { Project } from '../data/projects';
+import { repoUrl, releasesUrl } from '../data/projects';
+
+interface Props {
+  project: Project;
+  /** index, used to give each card a tiny, deterministic sticker rotation */
+  index: number;
+}
+
+const { project: p, index } = Astro.props;
+const repo = repoUrl(p);
+const releases = releasesUrl(p);
+
+// Deterministic-but-varied rotations so stickers look hand-slapped, not random.
+const rot = [-2.1, 1.4, -1.1, 2.0, -1.7, 1.0, -0.7, 1.8];
+const tilt = (i: number) => rot[i % rot.length];
+---
+
+<article
+  class="card"
+  data-accent={p.accent}
+  data-lang={p.lang}
+  data-platform={p.platform}
+  data-status={p.status}
+  id={p.slug}
+>
+  <div class="card-top">
+    <span class="emoji" aria-hidden="true">{p.emoji}</span>
+    <span class="stamp" data-status={p.status}>{p.status}</span>
+  </div>
+
+  <h3 class="card-name">
+    <a href={repo} target="_blank" rel="noopener">{p.name}</a>
+  </h3>
+  <p class="tagline">{p.tagline}</p>
+  <p class="blurb">{p.blurb}</p>
+
+  <ul class="tags" aria-label="tags">
+    <li class="tag tag-lang" style={`--t:${tilt(index)}deg`}>{p.lang}</li>
+    <li class="tag tag-plat" style={`--t:${tilt(index + 3)}deg`}>{p.platform}</li>
+    {
+      p.tags.map((t, i) => (
+        <li class="tag" style={`--t:${tilt(index + i + 5)}deg`}>
+          {t}
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="links">
+    {
+      p.demo && (
+        <a class="btn btn-primary" href={p.demo} target="_blank" rel="noopener">
+          <span aria-hidden="true">▶</span> Live demo
+        </a>
+      )
+    }
+    <a class="btn" href={repo} target="_blank" rel="noopener">
+      <span aria-hidden="true">⌥</span> Source
+    </a>
+    {
+      releases && (
+        <a class="btn" href={releases} target="_blank" rel="noopener">
+          <span aria-hidden="true">↓</span> Downloads
+        </a>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .card {
+    /* per-card accent, resolved from the design tokens */
+    --card-accent: var(--rust);
+    --card-accent-ink: var(--rust-ink);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1.4rem 1.4rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      border-color 0.18s ease,
+      opacity 0.3s ease;
+  }
+  .card[data-accent='teal'] {
+    --card-accent: var(--teal);
+    --card-accent-ink: var(--teal-ink);
+  }
+  .card[data-accent='hazard'] {
+    --card-accent: var(--hazard);
+    --card-accent-ink: var(--hazard-ink);
+  }
+
+  /* a colored spine down the left edge — the "label on the crate" */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    border-radius: var(--radius) 0 0 var(--radius);
+    background: var(--card-accent);
+  }
+
+  .card:hover {
+    transform: translateY(-4px) rotate(-0.25deg);
+    border-color: var(--card-accent);
+    box-shadow:
+      var(--shadow-card),
+      0 18px 36px -20px var(--card-accent);
+  }
+
+  /* dimmed state when filtered out (toggled by the grid script) */
+  .card[hidden] {
+    display: none;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .emoji {
+    font-size: 1.7rem;
+    line-height: 1;
+    filter: saturate(0.92);
+  }
+
+  .stamp {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border: 1.5px solid currentColor;
+    border-radius: 4px;
+    transform: rotate(3deg);
+    opacity: 0.85;
+  }
+  .stamp[data-status='Stable'] {
+    color: var(--teal-ink);
+  }
+  .stamp[data-status='Active'] {
+    color: var(--rust-ink);
+  }
+  .stamp[data-status='WIP'] {
+    color: var(--hazard-ink);
+  }
+
+  .card-name {
+    font-size: 1.5rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .card-name a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .card-name a:hover {
+    color: var(--card-accent-ink);
+  }
+
+  .tagline {
+    color: var(--card-accent-ink);
+    font-weight: 500;
+  }
+  .blurb {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .tags {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.45rem;
+    margin-top: 0.3rem;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 0.32rem 0.55rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--muted);
+    transform: rotate(var(--t, 0deg));
+    transition: transform 0.15s ease;
+  }
+  .tags:hover .tag {
+    transform: rotate(0deg);
+  }
+  .tag-lang {
+    color: var(--card-accent-ink);
+    border-color: var(--card-accent);
+    background: color-mix(in srgb, var(--card-accent) 12%, var(--surface));
+  }
+  .tag-plat {
+    color: var(--ink);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.8rem;
+  }
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.42rem 0.8rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--line-strong);
+    color: var(--ink);
+    background: transparent;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease,
+      transform 0.1s ease;
+  }
+  .btn span {
+    opacity: 0.7;
+  }
+  .btn:hover {
+    border-color: var(--card-accent);
+    color: var(--card-accent-ink);
+    transform: translateY(-1px);
+  }
+  .btn-primary {
+    background: var(--card-accent);
+    border-color: var(--card-accent);
+    color: #fff;
+  }
+  :root[data-theme='dark'] .btn-primary {
+    color: #16120d;
+  }
+  .btn-primary:hover {
+    color: #fff;
+    filter: brightness(1.06);
+  }
+  :root[data-theme='dark'] .btn-primary:hover {
+    color: #16120d;
+  }
+  .btn-primary span {
+    opacity: 0.9;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .card:hover,
+    .tag,
+    .btn {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

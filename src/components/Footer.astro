@@ -1,0 +1,90 @@
+---
+const year = 2026;
+---
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div class="foot-brand">
+      <span class="foot-mark" aria-hidden="true">🗑️</span>
+      <div>
+        <p class="foot-name">Trash Tools</p>
+        <p class="foot-tag">this site is also trash tools — built with the same robot.</p>
+      </div>
+    </div>
+
+    <nav class="foot-links" aria-label="Footer">
+      <a href="#projects">the pile</a>
+      <a href="#about">about</a>
+      <a href="https://github.com/AberrantWolf" target="_blank" rel="noopener">github</a>
+      <a href="mailto:scott@trashtools.net">email</a>
+    </nav>
+  </div>
+
+  <div class="wrap foot-fine">
+    <p>© {year} Scott Harper. Lovingly assembled from spare parts.</p>
+    <p class="foot-stack">Astro · Cloudflare Pages · open-licensed fonts (OFL) · no stolen art.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2rem;
+    border-top: 3px solid var(--rust);
+    background: var(--paper);
+  }
+  .footer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .foot-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .foot-mark {
+    font-size: 2rem;
+  }
+  .foot-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--ink);
+  }
+  .foot-tag {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+    max-width: 28rem;
+  }
+  .foot-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+  .foot-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .foot-links a:hover {
+    color: var(--rust);
+  }
+  .foot-fine {
+    margin-top: 2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.4rem 1.5rem;
+  }
+  .foot-fine p {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+</style>

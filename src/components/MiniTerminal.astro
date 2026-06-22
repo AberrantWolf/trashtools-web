@@ -1,0 +1,249 @@
+---
+import { projects } from '../data/projects';
+
+// Hand the client just what the terminal needs, as JSON.
+const data = projects.map((p) => ({
+  slug: p.slug,
+  tagline: p.tagline,
+  blurb: p.blurb,
+  lang: p.lang,
+  platform: p.platform,
+  status: p.status,
+}));
+---
+
+<div class="term" data-term>
+  <div class="term-bar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="term-title">scott@trashtools: ~</span>
+  </div>
+  <div class="term-body" data-term-body>
+    <p class="line muted">// it's a real shell. sort of. type <b>help</b> and hit enter.</p>
+  </div>
+  <form class="term-input" data-term-form autocomplete="off">
+    <span class="prompt" aria-hidden="true">$</span>
+    <input
+      type="text"
+      name="cmd"
+      aria-label="terminal command"
+      spellcheck="false"
+      autocapitalize="off"
+      data-term-cmd
+    />
+  </form>
+</div>
+
+<script type="application/json" data-term-data set:html={JSON.stringify(data)} />
+
+<style>
+  .term {
+    font-family: var(--font-mono);
+    background: #14110c;
+    color: #d9cdb6;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    font-size: 0.82rem;
+  }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.8rem;
+    background: #0d0b08;
+    border-bottom: 1px solid #ffffff14;
+  }
+  .dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+  }
+  .dot.r {
+    background: #e3743c;
+  }
+  .dot.y {
+    background: #e7b21c;
+  }
+  .dot.g {
+    background: #46a187;
+  }
+  .term-title {
+    margin-left: 0.5rem;
+    color: #8a7d68;
+    font-size: 0.72rem;
+  }
+  .term-body {
+    padding: 0.8rem;
+    height: 16.5rem;
+    overflow-y: auto;
+    line-height: 1.55;
+  }
+  .term-body .line {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .term-body .cmd-echo {
+    color: #f0c53a;
+  }
+  .term-body .cmd-echo::before {
+    content: '$ ';
+    color: #46a187;
+  }
+  .term-body .muted {
+    color: #8a7d68;
+  }
+  .term-body .err {
+    color: #e3743c;
+  }
+  .term-body .ok {
+    color: #79c4ab;
+  }
+  .term-body b {
+    color: #f0c53a;
+    font-weight: 700;
+  }
+  .term-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    border-top: 1px solid #ffffff14;
+    background: #100d09;
+  }
+  .term-input .prompt {
+    color: #46a187;
+    font-weight: 700;
+  }
+  .term-input input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #d9cdb6;
+    font: inherit;
+  }
+  /* scrollbar flavor */
+  .term-body::-webkit-scrollbar {
+    width: 8px;
+  }
+  .term-body::-webkit-scrollbar-thumb {
+    background: #3a3225;
+    border-radius: 8px;
+  }
+</style>
+
+<script>
+  interface TProj {
+    slug: string;
+    tagline: string;
+    blurb: string;
+    lang: string;
+    platform: string;
+    status: string;
+  }
+
+  const term = document.querySelector<HTMLElement>('[data-term]');
+  const body = term?.querySelector<HTMLElement>('[data-term-body]');
+  const form = term?.querySelector<HTMLFormElement>('[data-term-form]');
+  const input = term?.querySelector<HTMLInputElement>('[data-term-cmd]');
+  const dataEl = document.querySelector<HTMLElement>('[data-term-data]');
+
+  if (term && body && form && input && dataEl) {
+    const projects: TProj[] = JSON.parse(dataEl.textContent || '[]');
+    const history: string[] = [];
+    let hi = -1;
+
+    const print = (html: string, cls = 'line') => {
+      const p = document.createElement('p');
+      p.className = cls;
+      p.innerHTML = html;
+      body.appendChild(p);
+      body.scrollTop = body.scrollHeight;
+    };
+    const esc = (s: string) =>
+      s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const commands: Record<string, (args: string[]) => void> = {
+      help() {
+        print(
+          'available junk:\n' +
+            '  <b>ls</b>           list the tools\n' +
+            '  <b>cat</b> &lt;tool&gt;   read about one\n' +
+            '  <b>whoami</b>       who made this\n' +
+            '  <b>theme</b>        flip light/dark\n' +
+            '  <b>clear</b>        tidy up\n' +
+            '  <b>help</b>         this'
+        );
+      },
+      ls() {
+        print(projects.map((p) => p.slug).join('   '), 'line ok');
+      },
+      cat(args) {
+        const name = (args[0] || '').replace(/\/+$/, '');
+        if (!name) return print('cat: needs a tool name. try <b>ls</b>.', 'line err');
+        const p = projects.find((x) => x.slug === name);
+        if (!p) return print(`cat: ${esc(name)}: no such tool. try <b>ls</b>.`, 'line err');
+        print(
+          `<b>${esc(p.slug)}</b>  [${esc(p.lang)} · ${esc(p.platform)} · ${esc(p.status)}]\n` +
+            `${esc(p.tagline)}\n\n${esc(p.blurb)}`
+        );
+      },
+      whoami() {
+        print('scott harper — builds trash that, against the odds, works.', 'line ok');
+      },
+      theme() {
+        const root = document.documentElement;
+        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('tt-theme', next);
+        } catch (_) {}
+        print(`theme → ${next}`, 'line muted');
+      },
+      clear() {
+        body.innerHTML = '';
+      },
+      sudo() {
+        print('nice try. this is a static site. nobody is root here.', 'line err');
+      },
+      exit() {
+        print("you can't leave. you're already in the trash.", 'line muted');
+      },
+    };
+    commands['rm'] = (args) =>
+      args.join(' ').includes('-rf')
+        ? print('rm: refusing. it took me all year to make this much trash.', 'line err')
+        : print('rm: this is a demo, friend.', 'line err');
+    commands['man'] = () => commands.help([]);
+
+    function run(raw: string) {
+      const line = raw.trim();
+      print(esc(line || ''), 'line cmd-echo');
+      if (!line) return;
+      history.unshift(line);
+      hi = -1;
+      const [cmd, ...args] = line.split(/\s+/);
+      const fn = commands[cmd.toLowerCase()];
+      if (fn) fn(args);
+      else print(`${esc(cmd)}: command not found. try <b>help</b>.`, 'line err');
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      run(input.value);
+      input.value = '';
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' && hi < history.length - 1) {
+        hi += 1;
+        input.value = history[hi];
+        e.preventDefault();
+      } else if (e.key === 'ArrowDown') {
+        hi = Math.max(hi - 1, -1);
+        input.value = hi === -1 ? '' : history[hi];
+        e.preventDefault();
+      }
+    });
+  }
+</script>

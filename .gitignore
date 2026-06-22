@@ -1,0 +1,18 @@
+# build output
+dist/
+.astro/
+
+# deps
+node_modules/
+
+# mise installs node here per-project; keep the toml, ignore the rest
+.mise/
+
+# os / editor cruft
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# cloudflare
+.wrangler/

@@ -1,0 +1,359 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header class="hero" id="top">
+  <!-- drifting-debris background; sits behind everything, decorative only -->
+  <canvas class="hero-bg" data-hero-bg aria-hidden="true"></canvas>
+
+  <nav class="nav wrap" aria-label="Primary">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">🗑️</span>
+      <span class="brand-text">trashtools<span class="dim">.net</span></span>
+    </a>
+    <div class="nav-right">
+      <a class="nav-link" href="#projects">the pile</a>
+      <a class="nav-link" href="#about">about</a>
+      <a class="nav-link" href="https://github.com/AberrantWolf" target="_blank" rel="noopener"
+        >github ↗</a
+      >
+      <ThemeToggle />
+    </div>
+  </nav>
+
+  <div class="hero-inner wrap">
+    <span class="tape">est. this year · made with robots</span>
+    <h1 class="wordmark">
+      <span class="line">TRASH</span>
+      <span class="line line-2">TOOLS</span>
+    </h1>
+    <p class="tagline">stuff i built with robots. surprisingly, it works.</p>
+    <p class="sub">
+      A pile of small, AI-assisted tools I cobbled together in my spare time — ROM wranglers,
+      PDF contraptions, a Dragon&nbsp;Quest&nbsp;X router, and the Rust plumbing underneath. The
+      name’s a bit. The craftsmanship isn’t.
+    </p>
+    <div class="cta">
+      <a class="cta-btn cta-primary" href="#projects">Dig through it →</a>
+      <a class="cta-btn" href="#about">Why “trash”?</a>
+    </div>
+  </div>
+
+  <a class="scroll-cue" href="#projects" aria-label="Scroll to projects">
+    <span></span>
+  </a>
+</header>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    min-height: min(94vh, 820px);
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    /* a warm wash from the top so the wordmark has somewhere to sit */
+    background:
+      radial-gradient(120% 80% at 50% -10%, color-mix(in srgb, var(--rust) 12%, transparent), transparent 60%),
+      radial-gradient(90% 60% at 85% 10%, color-mix(in srgb, var(--teal) 10%, transparent), transparent 55%);
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.1rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .brand-mark {
+    font-size: 1.3rem;
+  }
+  .brand .dim {
+    color: var(--muted);
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+  .nav-link:hover {
+    color: var(--rust);
+  }
+  @media (max-width: 560px) {
+    .nav-link {
+      display: none;
+    }
+    .nav-link:last-of-type {
+      display: inline;
+    }
+  }
+
+  .hero-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.1rem;
+    padding-block: clamp(2rem, 6vw, 4rem);
+  }
+  .wordmark {
+    font-size: clamp(3.4rem, 1.5rem + 12vw, 11rem);
+    line-height: 0.86;
+    letter-spacing: -0.03em;
+    margin-block: 0.3rem 0.2rem;
+  }
+  .wordmark .line {
+    display: block;
+  }
+  .wordmark .line-2 {
+    color: var(--rust);
+    /* a slightly battered baseline shove, like a misaligned stencil */
+    margin-left: 0.06em;
+    -webkit-text-stroke: 0 transparent;
+  }
+  .tagline {
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 0.8rem + 1vw, 1.4rem);
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .sub {
+    max-width: 40rem;
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 0.6rem;
+  }
+  .cta-btn {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-decoration: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--line-strong);
+    color: var(--ink);
+    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--rust);
+  }
+  .cta-primary {
+    background: var(--rust);
+    border-color: var(--rust);
+    color: #fff;
+  }
+  :root[data-theme='dark'] .cta-primary {
+    color: #16120d;
+  }
+  .cta-primary:hover {
+    color: #fff;
+    filter: brightness(1.05);
+  }
+  :root[data-theme='dark'] .cta-primary:hover {
+    color: #16120d;
+  }
+
+  .scroll-cue {
+    align-self: center;
+    margin-bottom: 1.4rem;
+    width: 24px;
+    height: 38px;
+    border: 2px solid var(--muted);
+    border-radius: 12px;
+    display: grid;
+    place-items: start center;
+    padding-top: 6px;
+  }
+  .scroll-cue span {
+    width: 4px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--rust);
+    animation: scrolldot 1.6s ease-in-out infinite;
+  }
+  @keyframes scrolldot {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    50% {
+      transform: translateY(9px);
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-cue span {
+      animation: none;
+    }
+    .cta-btn {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Drifting "junk" field: slow floating polygons (bolts/shards) in accent hues.
+  // Decorative, capped, paused when off-screen / reduced-motion / tab hidden.
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-bg]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canvas && !reduce) {
+    const ctx = canvas.getContext('2d')!;
+    let w = 0,
+      h = 0,
+      dpr = Math.min(devicePixelRatio || 1, 2);
+
+    const css = () => getComputedStyle(document.documentElement);
+    let colors: string[] = [];
+    const readColors = () => {
+      const s = css();
+      colors = [
+        s.getPropertyValue('--rust').trim(),
+        s.getPropertyValue('--teal').trim(),
+        s.getPropertyValue('--hazard').trim(),
+        s.getPropertyValue('--muted').trim(),
+      ];
+    };
+
+    interface Bit {
+      x: number;
+      y: number;
+      r: number;
+      a: number;
+      va: number;
+      vx: number;
+      vy: number;
+      sides: number;
+      c: string;
+      o: number;
+    }
+    let bits: Bit[] = [];
+
+    function rng(min: number, max: number) {
+      // index-free pseudo-random spread; fine for decoration
+      return min + (max - min) * (Math.sin(bits.length * 12.9898 + 78.233) * 43758.5453 % 1 || 0.5);
+    }
+
+    function build() {
+      const area = w * h;
+      const count = Math.max(10, Math.min(46, Math.round(area / 38000)));
+      bits = [];
+      for (let i = 0; i < count; i++) {
+        bits.push({
+          x: ((i * 97) % 100) / 100 * w,
+          y: ((i * 53) % 100) / 100 * h,
+          r: 6 + ((i * 7) % 22),
+          a: (i % 10) * 0.6,
+          va: ((i % 5) - 2) * 0.0016,
+          vx: (((i % 7) - 3) / 3) * 0.12,
+          vy: -0.08 - ((i % 4) / 4) * 0.12,
+          sides: 3 + (i % 4),
+          c: colors[i % colors.length] || '#888',
+          o: 0.06 + ((i % 5) / 5) * 0.12,
+        });
+      }
+    }
+
+    function resize() {
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      build();
+    }
+
+    function poly(b: Bit) {
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.a);
+      ctx.globalAlpha = b.o;
+      ctx.strokeStyle = b.c;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let i = 0; i <= b.sides; i++) {
+        const ang = (i / b.sides) * Math.PI * 2;
+        const px = Math.cos(ang) * b.r;
+        const py = Math.sin(ang) * b.r;
+        i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    let raf = 0;
+    function frame() {
+      ctx.clearRect(0, 0, w, h);
+      for (const b of bits) {
+        b.x += b.vx;
+        b.y += b.vy;
+        b.a += b.va;
+        if (b.y < -30) b.y = h + 30;
+        if (b.x < -30) b.x = w + 30;
+        if (b.x > w + 30) b.x = -30;
+        poly(b);
+      }
+      raf = requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (!raf) frame();
+    }
+    function stop() {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    }
+
+    readColors();
+    resize();
+    start();
+
+    addEventListener('resize', resize, { passive: true });
+    document.addEventListener('visibilitychange', () =>
+      document.hidden ? stop() : start()
+    );
+    // recolor when the theme flips
+    new MutationObserver(readColors).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    // pause when the hero scrolls out of view
+    new IntersectionObserver(
+      ([e]) => (e.isIntersecting ? start() : stop()),
+      { threshold: 0 }
+    ).observe(canvas);
+  }
+</script>

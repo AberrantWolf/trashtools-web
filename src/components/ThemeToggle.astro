@@ -1,0 +1,66 @@
+---
+// Light/dark toggle. Initial state is set pre-paint by the inline script in
+// Base.astro; this just flips + persists, and keeps the icon in sync.
+---
+
+<button class="theme-toggle" data-theme-toggle type="button" aria-label="Toggle dark mode">
+  <span class="sun" aria-hidden="true">☀</span>
+  <span class="moon" aria-hidden="true">☾</span>
+</button>
+
+<style>
+  .theme-toggle {
+    position: relative;
+    width: 2.3rem;
+    height: 2.3rem;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border-radius: 999px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 1.05rem;
+    line-height: 1;
+    transition: border-color 0.15s ease, transform 0.12s ease;
+  }
+  .theme-toggle:hover {
+    border-color: var(--rust);
+    transform: rotate(12deg);
+  }
+  .theme-toggle .sun,
+  .theme-toggle .moon {
+    position: absolute;
+    transition: opacity 0.2s ease, transform 0.3s ease;
+  }
+  /* show moon in light mode (click → go dark), sun in dark mode */
+  :root[data-theme='light'] .sun {
+    opacity: 0;
+    transform: scale(0.4) rotate(-90deg);
+  }
+  :root[data-theme='dark'] .moon {
+    opacity: 0;
+    transform: scale(0.4) rotate(90deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle,
+    .theme-toggle .sun,
+    .theme-toggle .moon {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  btn?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('tt-theme', next);
+    } catch (_) {
+      /* private mode — fine, just won't persist */
+    }
+  });
+</script>

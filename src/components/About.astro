@@ -1,0 +1,108 @@
+---
+import MiniTerminal from './MiniTerminal.astro';
+---
+
+<section class="about" id="about" aria-labelledby="about-h">
+  <div class="wrap about-grid">
+    <div class="about-copy">
+      <span class="tape">the bill of goods</span>
+      <h2 id="about-h">Why “trash”?</h2>
+
+      <p>
+        I call these <strong>Trash Tools</strong> on purpose. Most of the code was written with
+        an LLM riding shotgun, so by a certain purist yardstick it’s “less valuable” — not
+        hand-forged by a human, therefore lesser. I’d rather put that label on myself, with a
+        wink, than wait for someone to throw it at me as a gotcha.
+      </p>
+      <p>
+        Here’s the part the label doesn’t mention: <em>the stuff works.</em> Every tool here
+        scratches a real itch I had — translating documents without paying a fortune, wrangling a
+        shelf of ROMs, imposing a booklet for printing, finding the fastest route across a game
+        world. I built them because the alternatives were expensive, tedious, or didn’t exist. AI
+        let me ship them in spare time instead of never. That’s the whole trade.
+      </p>
+      <p>
+        So: judge the work, not the process. Or judge the process too — it’s right there in the
+        repos. This site is also Trash Tools, by the way. Same robot, same rules.
+      </p>
+
+      <div class="signoff">
+        <p class="who">— Scott Harper</p>
+        <div class="contact">
+          <a class="contact-link" href="mailto:scott@trashtools.net">scott@trashtools.net</a>
+          <span class="dot" aria-hidden="true">·</span>
+          <a class="contact-link" href="https://github.com/AberrantWolf" target="_blank" rel="noopener"
+            >github.com/AberrantWolf</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <aside class="about-aside" aria-label="A small terminal to poke at">
+      <MiniTerminal />
+    </aside>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    background:
+      linear-gradient(var(--paper-2), var(--paper-2)) padding-box,
+      radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--teal) 8%, transparent), transparent 60%);
+    border-block: 1px dashed var(--line-strong);
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    align-items: start;
+  }
+  @media (max-width: 820px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .about-copy h2 {
+    font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem);
+    margin: 0.7rem 0 1.1rem;
+  }
+  .about-copy p {
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+    max-width: 38rem;
+  }
+  .about-copy strong {
+    color: var(--ink);
+  }
+  .signoff {
+    margin-top: 1.8rem;
+  }
+  .who {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem !important;
+  }
+  .contact {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .contact .dot {
+    color: var(--muted);
+  }
+  .about-aside {
+    position: sticky;
+    top: 1.5rem;
+  }
+  @media (max-width: 820px) {
+    .about-aside {
+      position: static;
+    }
+  }
+</style>
