@@ -28,8 +28,8 @@ export interface Project {
   tags: string[];
   /** card theming, for visual variety across the grid */
   accent: Accent;
-  /** live, clickable demo (web tools only) */
-  demo?: string;
+  /** URL where the tool actually runs — a live, launchable web app */
+  launch?: string;
   /** true if the repo ships prebuilt binaries on its Releases page */
   releases?: boolean;
   /** override the github url if the repo name differs from slug */
@@ -79,7 +79,7 @@ export const projects: Project[] = [
     status: 'Active',
     tags: ['Dragon Quest', 'routing', 'Dijkstra', 'bilingual'],
     accent: 'hazard',
-    demo: 'https://dqx-wayfinder.trashtools.net',
+    launch: 'https://dqx-wayfinder.trashtools.net',
   },
   {
     slug: 'expat-junk',

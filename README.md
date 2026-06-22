@@ -26,6 +26,15 @@ npm run build        # → ./dist  (what Cloudflare Pages serves)
 npm run preview      # serve the built output locally
 ```
 
+## Social card
+
+The Open Graph preview image is rendered from `assets/og.svg` using the site's
+own fonts. Edit the SVG, then:
+
+```bash
+npm run og           # → public/og.png   (needs rsvg-convert / librsvg installed)
+```
+
 ## Adding a tool
 
 Edit `src/data/projects.ts` — copy a block, fill in the fields. The card, its
