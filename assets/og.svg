@@ -58,7 +58,7 @@
   </g>
 
   <!-- tagline -->
-  <text x="86" y="548" font-family="JetBrains Mono" font-weight="700" font-size="27" fill="#4f463a">stuff i built with robots. surprisingly, it works.</text>
+  <text x="86" y="548" font-family="JetBrains Mono" font-weight="700" font-size="27" fill="#4f463a">stuff i made with robots.</text>
 
   <!-- url -->
   <text x="1144" y="585" text-anchor="end" font-family="JetBrains Mono" font-weight="700"

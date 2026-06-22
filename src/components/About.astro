@@ -15,19 +15,19 @@ import MiniTerminal from './MiniTerminal.astro';
         wink, than wait for someone to throw it at me as a gotcha.
       </p>
       <p>
-        Here’s the part the label doesn’t mention: <em>the stuff works.</em> Every tool here
-        scratches a real itch I had — translating documents without paying a fortune, wrangling a
-        shelf of ROMs, imposing a booklet for printing, finding the fastest route across a game
-        world. I built them because the alternatives were expensive, tedious, or didn’t exist. AI
-        let me ship them in spare time instead of never. That’s the whole trade.
+        Each one scratches a real itch I had — translating documents without paying a fortune,
+        wrangling a shelf of ROMs, imposing a booklet for printing, finding the fastest route
+        across a game world. The alternatives were expensive, tedious, or didn’t exist, so I made
+        these instead. AI let me do it in spare time instead of never. That’s the trade.
       </p>
       <p>
-        So: judge the work, not the process. Or judge the process too — it’s right there in the
-        repos. This site is also Trash Tools, by the way. Same robot, same rules.
+        The code’s all right there in the repos, robot fingerprints and all. This site is one of
+        them too — same robot, same rules.
       </p>
 
       <div class="signoff">
         <p class="who">— Scott Harper</p>
+        <p class="role">piler of trash</p>
         <div class="contact">
           <a class="contact-link" href="mailto:scott@trashtools.net">scott@trashtools.net</a>
           <span class="dot" aria-hidden="true">·</span>
@@ -83,7 +83,13 @@ import MiniTerminal from './MiniTerminal.astro';
     font-weight: 800;
     font-size: 1.2rem;
     color: var(--ink);
-    margin-bottom: 0.4rem !important;
+    margin-bottom: 0.1rem !important;
+  }
+  .role {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.7rem !important;
   }
   .contact {
     font-family: var(--font-mono);
