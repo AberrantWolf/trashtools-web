@@ -9,8 +9,8 @@ import ProjectCard from './ProjectCard.astro';
       <span class="tape">the pile</span>
       <h2 id="projects-h">Various tools, assorted condition.</h2>
       <p class="lede">
-        Mostly Rust. One that runs in your browser. All built using copious robot. Maybe useful
-        to others.
+        Mostly Rust. Desktop apps, browser tools, and a few things for the command line.
+        All built using copious robot. Maybe useful to others.
       </p>
     </div>
 
@@ -221,9 +221,11 @@ import ProjectCard from './ProjectCard.astro';
     });
 
     function reset() {
+      const firstSelected = chips.find((chip) => chip.getAttribute('aria-pressed') === 'true');
       Object.values(active).forEach((s) => s.clear());
       chips.forEach((c) => c.setAttribute('aria-pressed', 'false'));
       apply();
+      firstSelected?.focus();
     }
     resetBtns.forEach((b) => b.addEventListener('click', reset));
 

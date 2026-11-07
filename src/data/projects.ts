@@ -7,7 +7,7 @@
    =========================================================================== */
 
 export type Lang = 'Rust' | 'Web' | 'Shell';
-export type Platform = 'CLI' | 'Desktop' | 'Web' | 'Extension' | 'Library' | 'Scripts';
+export type Platform = 'CLI' | 'Desktop' | 'Server' | 'Web' | 'Extension' | 'Library' | 'Scripts';
 export type Status = 'Stable' | 'Active' | 'WIP' | 'Retired';
 export type Accent = 'rust' | 'teal' | 'hazard';
 
@@ -30,7 +30,7 @@ export interface Project {
   accent: Accent;
   /** URL where the tool actually runs — a live, launchable web app */
   launch?: string;
-  /** true if the repo ships prebuilt binaries on its Releases page */
+  /** true if the repo offers downloads on its Releases page */
   releases?: boolean;
   /** override the github url if the repo name differs from slug */
   repo?: string;
@@ -40,17 +40,31 @@ const GH = 'https://github.com/AberrantWolf';
 
 export const projects: Project[] = [
   {
-    slug: 'retro-junk',
-    name: 'retro-junk',
-    emoji: '🕹️',
-    tagline: 'rom & disc-image wrangler for 23 consoles',
+    slug: 'junk-collector',
+    name: 'Junk Collector',
+    emoji: '🗃️',
+    tagline: 'a self-hosted archive for games and music',
     blurb:
-      'A Rust CLI that analyzes, renames, and scrapes metadata for retro game ROMs and disc images — 23 systems across Nintendo, Sony, Sega, and Microsoft. Streaming CRC32/SHA1/MD5, CUE/CHD/ISO parsing, the works.',
+      'Keep your game dumps and music in one place, with metadata and artwork alongside the original files. Play supported audio in your browser or connect Trash Amp. Available as a Docker beta.',
     lang: 'Rust',
-    platform: 'CLI',
-    status: 'Stable',
-    tags: ['ROMs', 'hashing', 'No-Intro / Redump', 'CD images'],
+    platform: 'Server',
+    status: 'Active',
+    tags: ['game preservation', 'music', 'self-hosted', 'Docker'],
     accent: 'rust',
+    releases: true,
+  },
+  {
+    slug: 'trash-amp',
+    name: 'Trash Amp',
+    emoji: '🎧',
+    tagline: 'a music player built around albums',
+    blurb:
+      'Browse and play albums from local folders or a Junk Collector server. The current beta download is for Apple Silicon Macs running macOS 15 or newer.',
+    lang: 'Rust',
+    platform: 'Desktop',
+    status: 'Active',
+    tags: ['music player', 'albums', 'macOS', 'beta'],
+    accent: 'teal',
     releases: true,
   },
   {
@@ -127,7 +141,7 @@ export const projects: Project[] = [
     emoji: '💿',
     tagline: 'rip, identify, verify & catalog audio CDs',
     blurb:
-      'retro-junk’s sibling, pointed at music instead of games: identify CD rips by disc ID against MusicBrainz and Discogs, verify them against AccurateRip, catalog everything in SQLite, and export tidy tagged FLAC with cover art. Built around uncommon and foreign-language discs — Thai, Korean, Chinese, Japanese — where you might not even know how to type the title. CLI + GUI in sync.',
+      'Identify CD rips by disc ID against MusicBrainz and Discogs, verify them against AccurateRip, catalog everything in SQLite, and export tidy tagged FLAC with cover art. Built around uncommon and foreign-language discs — Thai, Korean, Chinese, Japanese — where you might not even know how to type the title. CLI + GUI in sync.',
     lang: 'Rust',
     platform: 'CLI',
     status: 'WIP',
@@ -161,6 +175,19 @@ export const projects: Project[] = [
     accent: 'rust',
   },
   {
+    slug: 'task-ticket',
+    name: 'Task Ticket',
+    emoji: '🧾',
+    tagline: 'print your to-dos on receipt paper',
+    blurb:
+      'Send a task and an optional next step from your terminal to a networked thermal receipt printer. The paper ticket is the to-do list. Each one comes with a little kaomoji.',
+    lang: 'Rust',
+    platform: 'CLI',
+    status: 'Active',
+    tags: ['receipt printer', 'ESC/POS', 'to-dos'],
+    accent: 'hazard',
+  },
+  {
     slug: 'junk-libs',
     name: 'junk-libs',
     emoji: '🔩',
@@ -180,7 +207,7 @@ export function repoUrl(p: Project): string {
   return p.repo ?? `${GH}/${p.slug}`;
 }
 
-/** Releases page URL, when the project ships binaries. */
+/** Releases page URL, when the project offers downloads. */
 export function releasesUrl(p: Project): string | undefined {
   return p.releases ? `${repoUrl(p)}/releases` : undefined;
 }
@@ -188,6 +215,6 @@ export function releasesUrl(p: Project): string | undefined {
 /** Distinct facet values, in display order, for the filter UI. */
 export const facets = {
   lang: ['Rust', 'Web', 'Shell'] as Lang[],
-  platform: ['CLI', 'Desktop', 'Web', 'Extension', 'Library', 'Scripts'] as Platform[],
+  platform: ['CLI', 'Desktop', 'Server', 'Web', 'Extension', 'Library', 'Scripts'] as Platform[],
   status: ['Stable', 'Active', 'WIP'] as Status[],
 };

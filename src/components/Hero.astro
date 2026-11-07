@@ -29,9 +29,9 @@ import ThemeToggle from './ThemeToggle.astro';
     </h1>
     <p class="tagline">stuff i made with robots.</p>
     <p class="sub">
-      A pile of small, AI-assisted tools I made in my spare time — ROM wranglers, PDF
-      contraptions, a Dragon&nbsp;Quest&nbsp;X router, and the Rust plumbing underneath. I needed
-      them, so I made them.
+      A pile of small, AI-assisted tools I made in my spare time, from a self-hosted game and
+      music archive to an album player, PDF contraptions, and a Dragon&nbsp;Quest&nbsp;X router.
+      I needed them, so I made them.
     </p>
     <div class="cta">
       <a class="cta-btn cta-primary" href="#projects">Dig through it →</a>
@@ -262,11 +262,6 @@ import ThemeToggle from './ThemeToggle.astro';
     }
     let bits: Bit[] = [];
 
-    function rng(min: number, max: number) {
-      // index-free pseudo-random spread; fine for decoration
-      return min + (max - min) * (Math.sin(bits.length * 12.9898 + 78.233) * 43758.5453 % 1 || 0.5);
-    }
-
     function build() {
       const area = w * h;
       const count = Math.max(10, Math.min(46, Math.round(area / 38000)));
@@ -287,14 +282,14 @@ import ThemeToggle from './ThemeToggle.astro';
       }
     }
 
-    function resize() {
+    const resize = () => {
       w = canvas.clientWidth;
       h = canvas.clientHeight;
       canvas.width = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       build();
-    }
+    };
 
     function poly(b: Bit) {
       ctx.save();

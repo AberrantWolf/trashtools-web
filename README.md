@@ -9,19 +9,19 @@ islands, and all of it respects `prefers-reduced-motion`.
 
 ## Develop
 
-This repo uses [mise](https://mise.jdx.dev) to pin Node (see `mise.toml`):
+Use Node 22.12 or newer. `.node-version` selects Node 22 for the deployment
+build. If you use [mise](https://mise.jdx.dev), `mise install` installs the
+current Node LTS specified in `mise.toml`.
 
 ```bash
-mise install        # first time: gets the pinned Node
-npm install
+npm ci
 npm run dev          # http://localhost:4321
 ```
-
-If you'd rather not use mise, any Node 20+ with npm works — just `npm install && npm run dev`.
 
 ## Build
 
 ```bash
+npm run check        # type-check the Astro site
 npm run build        # → ./dist  (what Cloudflare Pages serves)
 npm run preview      # serve the built output locally
 ```

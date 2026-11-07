@@ -224,8 +224,8 @@ const data = projects.map((p) => ({
       history.unshift(line);
       hi = -1;
       const [cmd, ...args] = line.split(/\s+/);
-      const fn = commands[cmd.toLowerCase()];
-      if (fn) fn(args);
+      const name = cmd.toLowerCase();
+      if (Object.hasOwn(commands, name)) commands[name](args);
       else print(`${esc(cmd)}: command not found. try <b>help</b>.`, 'line err');
     }
 

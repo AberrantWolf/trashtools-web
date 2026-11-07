@@ -38,13 +38,13 @@
     };
     let colors = palette();
 
-    function resize() {
+    const resize = () => {
       w = innerWidth;
       h = innerHeight;
       canvas.width = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
+    };
     resize();
     addEventListener('resize', resize, { passive: true });
     new MutationObserver(() => (colors = palette())).observe(document.documentElement, {
