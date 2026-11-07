@@ -12,7 +12,7 @@ export type Status = 'Stable' | 'Active' | 'WIP' | 'Retired';
 export type Accent = 'rust' | 'teal' | 'hazard';
 
 export interface Project {
-  /** repo name on GitHub; also the anchor id */
+  /** card anchor and default GitHub repo name */
   slug: string;
   /** display name */
   name: string;
@@ -32,8 +32,8 @@ export interface Project {
   launch?: string;
   /** true if the repo offers downloads on its Releases page */
   releases?: boolean;
-  /** override the github url if the repo name differs from slug */
-  repo?: string;
+  /** override the default GitHub URL, or use null when there is no public source link */
+  repo?: string | null;
 }
 
 const GH = 'https://github.com/AberrantWolf';
@@ -96,6 +96,21 @@ export const projects: Project[] = [
     launch: 'https://dqx-wayfinder.trashtools.net',
   },
   {
+    slug: 'electro-junk',
+    name: 'Electro Junk',
+    emoji: '⚡',
+    tagline: 'learn the basics of electricity and circuits',
+    blurb:
+      'Explore electricity through interactive lessons in English and Japanese. The lessons start with circuit basics and cover topics for Japan’s Class 2 electrician exam.',
+    lang: 'Web',
+    platform: 'Web',
+    status: 'Active',
+    tags: ['electricity', 'circuits', 'bilingual'],
+    accent: 'hazard',
+    launch: 'https://electro-junk.trashtools.net/',
+    repo: null,
+  },
+  {
     slug: 'cardtable',
     name: 'cardtable',
     emoji: '🃏',
@@ -134,19 +149,6 @@ export const projects: Project[] = [
     status: 'Stable',
     tags: ['Linux', 'Wine', 'gaming', 'Dragon Quest'],
     accent: 'rust',
-  },
-  {
-    slug: 'phono-junk',
-    name: 'phono-junk',
-    emoji: '💿',
-    tagline: 'rip, identify, verify & catalog audio CDs',
-    blurb:
-      'Identify CD rips by disc ID against MusicBrainz and Discogs, verify them against AccurateRip, catalog everything in SQLite, and export tidy tagged FLAC with cover art. Built around uncommon and foreign-language discs — Thai, Korean, Chinese, Japanese — where you might not even know how to type the title. CLI + GUI in sync.',
-    lang: 'Rust',
-    platform: 'CLI',
-    status: 'WIP',
-    tags: ['audio CDs', 'MusicBrainz', 'AccurateRip', 'FLAC'],
-    accent: 'teal',
   },
   {
     slug: 'art-junk',
@@ -202,14 +204,15 @@ export const projects: Project[] = [
   },
 ];
 
-/** GitHub repo URL for a project. */
-export function repoUrl(p: Project): string {
-  return p.repo ?? `${GH}/${p.slug}`;
+/** GitHub repo URL, when there is a public source link. */
+export function repoUrl(p: Project): string | undefined {
+  return p.repo === null ? undefined : p.repo ?? `${GH}/${p.slug}`;
 }
 
 /** Releases page URL, when the project offers downloads. */
 export function releasesUrl(p: Project): string | undefined {
-  return p.releases ? `${repoUrl(p)}/releases` : undefined;
+  const repo = repoUrl(p);
+  return p.releases && repo ? `${repo}/releases` : undefined;
 }
 
 /** Distinct facet values, in display order, for the filter UI. */

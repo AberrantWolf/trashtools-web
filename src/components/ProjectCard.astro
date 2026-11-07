@@ -11,6 +11,7 @@ interface Props {
 const { project: p, index } = Astro.props;
 const repo = repoUrl(p);
 const releases = releasesUrl(p);
+const titleUrl = repo ?? p.launch;
 
 // Deterministic-but-varied rotations so stickers look hand-slapped, not random.
 const rot = [-2.1, 1.4, -1.1, 2.0, -1.7, 1.0, -0.7, 1.8];
@@ -31,7 +32,7 @@ const tilt = (i: number) => rot[i % rot.length];
   </div>
 
   <h3 class="card-name">
-    <a href={repo} target="_blank" rel="noopener">{p.name}</a>
+    {titleUrl ? <a href={titleUrl} target="_blank" rel="noopener">{p.name}</a> : p.name}
   </h3>
   <p class="tagline">{p.tagline}</p>
   <p class="blurb">{p.blurb}</p>
@@ -56,9 +57,13 @@ const tilt = (i: number) => rot[i % rot.length];
         </a>
       )
     }
-    <a class="btn" href={repo} target="_blank" rel="noopener">
-      <span aria-hidden="true">⌥</span> Source
-    </a>
+    {
+      repo && (
+        <a class="btn" href={repo} target="_blank" rel="noopener">
+          <span aria-hidden="true">⌥</span> Source
+        </a>
+      )
+    }
     {
       releases && (
         <a class="btn" href={releases} target="_blank" rel="noopener">
